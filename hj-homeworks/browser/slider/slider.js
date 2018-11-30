@@ -1,24 +1,13 @@
 'use strict';
 
 const slider = document.getElementById('slider');
+const links = ['./i/airmax-jump.png', './i/airmax-on-foot.png', './i/airmax-playground.png', './i/airmax-top-view.png', './i/airmax.png'];
 let phase = 0;
+roulette();
+
 function roulette() {
-  switch (phase % 5) {
-    case 0:
-      slider.src = './i/airmax-jump.png';
-      break;
-    case 1:
-      slider.src = './i/airmax-on-foot.png';
-      break;
-    case 2:
-      slider.src = './i/airmax-playground.png';
-      break;
-    case 3:
-      slider.src = './i/airmax-top-view.png';
-      break;
-    default:
-      slider.src = './i/airmax.png';
-  }
+  slider.src = links[phase % 5];
   phase++;
 }
+
 setInterval(roulette, 5000);
