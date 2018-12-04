@@ -33,6 +33,14 @@ function init() {
   container = document.getElementById('container');
   container.querySelector('.list-view').addEventListener('click', contactClick);
   container.querySelector('.back').addEventListener('click', backClick);
+  let contactsBlock = document.getElementsByClassName('contacts-list');
+  let contacts = JSON.parse(loadContacts());
+  let content = ``;
+  for (let i = 0; i < contacts.length; i++) {
+    content += `<li data-email="${contacts[i].email}" data-phone="${contacts[i].phone}"><strong>${contacts[i].name}</strong></li>`;
+  }
+
+  contactsBlock[0].innerHTML = content;
 }
 
 document.addEventListener('DOMContentLoaded', init);
