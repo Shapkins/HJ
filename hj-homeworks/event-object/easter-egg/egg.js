@@ -11,10 +11,6 @@ function navigation(event) {
 
 function netology(event) {
   check.push(event.code);
-  console.log(check === password)
-  console.log(check)
-  console.log(password)
-  console.log('---')
   for(let i = 0; i < check.length; i++) {
     if (password[i] !== check[i]) {
       check = [];
