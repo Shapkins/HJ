@@ -16,17 +16,6 @@ function onLoad() {
   }
 }
 
-/*
-<li>
-         data-title = catalog[i].title
-         data-author = catalog[i].author.name
-         data-info = catalog[i].info
-         data-price= catalog[i].price>
-       <img src = catalog[i].cover.small>
-    </li>
-*/
-
-
 // Регулируем видимость карточки
 function toggleCardVisible () {
  document.getElementById('content').classList.toggle('hidden');
