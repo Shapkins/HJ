@@ -2,6 +2,9 @@
 
 const buttons = document.querySelector('.wrap-btns');
 buttons.addEventListener('click', buttonClick);
+if (document.getElementById('counter').textContent !== '0') {
+  localStorage.counter = 0;
+}
 document.getElementById('counter').textContent = localStorage.counter;
 
 

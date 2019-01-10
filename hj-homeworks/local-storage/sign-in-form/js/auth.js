@@ -8,6 +8,9 @@ const signUpButton = signUp.querySelector('div .button');
 signInButton.addEventListener('click', signInFunction);
 signUpButton.addEventListener('click', signUpFunction);
 
+if (localStorage.email === undefined) {
+  localStorage.email = '';
+}
 signIn.querySelector('#email').value = localStorage.email;
 
 function signInFunction(event) {
