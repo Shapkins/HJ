@@ -3,6 +3,10 @@
 const colorSnippet = document.getElementById('colorSwatch');
 const sizeSnippet = document.getElementById('sizeSwatch');
 const cart = document.getElementById('quick-cart');
+const targets = document.getElementsByClassName('swatch-element');
+const clickingArea = document.querySelector('.swatches');
+const form = document.getElementById('AddToCartForm');
+const formButton = document.getElementById('AddToCart');
 let colorsAvailable = new XMLHttpRequest();
 let sizeAvailable = new XMLHttpRequest();
 let cartStatus = new XMLHttpRequest();
@@ -11,21 +15,13 @@ colorsAvailable.open('GET', 'https://neto-api.herokuapp.com/cart/colors', true);
 colorsAvailable.send();
 colorsAvailable.addEventListener('load', colorPrint);
 
-
 sizeAvailable.open('GET', 'https://neto-api.herokuapp.com/cart/sizes', true);
 sizeAvailable.send();
 sizeAvailable.addEventListener('load', sizePrint);
 
-cartStatus.open('GET', 'https://neto-api.herokuapp.com/cart', true);
-cartStatus.send();
-cartStatus.addEventListener('load', cartPrint);
-
-function onLoad() {
-  if (event.target.status === 200) {
-    const response = JSON.parse(event.target.responseText);
-    console.log(response);
-  }
-}
+updateCart();
+clickingArea.addEventListener('click', clickSize);
+formButton.addEventListener('click', sendForm);
 
 function colorPrint() {
   let divClass;
@@ -76,11 +72,68 @@ function sizePrint() {
 }
 
 function cartPrint() {
+  let sum = 0;
+  let addingPrice = 0;
+  cart.innerHTML = '';
   if (event.target.status === 200) {
     const response = JSON.parse(event.target.responseText);
     for (let item of response) {
       cart.innerHTML += `<div class="quick-cart-product quick-cart-product-static" id="quick-cart-product-${item.id}" style="opacity: 1;"><div class="quick-cart-product-wrap">  <img src="${item.pic}" title="${item.title}">  <span class="s1" style="background-color: #000; opacity: .5">$800.00</span>  <span class="s2"></span></div><span class="count hide fadeUp" id="quick-cart-product-count-${item.id}">${item.quantity}</span><span class="quick-cart-product-remove remove" data-id="${item.id}"></span></div>`;
-      cart.innerHTML += `<a id="quick-cart-pay" quickbeam="cart-pay" class="cart-ico open"><span>  <strong class="quick-cart-text">Оформить заказ<br></strong>  <span id="quick-cart-price">$800.00</span></span></a>`;
+      }
+    let prices = cart.getElementsByClassName('s1');
+    let counts = cart.getElementsByClassName('count');
+    for (let price of prices) {
+      addingPrice = parseFloat(price.innerHTML.slice(1)).toFixed(2);
+    }
+    for (let count of counts) {
+      sum += + (addingPrice * count.innerHTML).toFixed(2);
+    }
+    cart.innerHTML += `<a id="quick-cart-pay" quickbeam="cart-pay" class="cart-ico open"><span>  <strong class="quick-cart-text">Оформить заказ<br></strong>  <span id="quick-cart-price">$${sum.toFixed(2)}</span></span></a>`;
+    if (response.length === 0) {
+      cart.querySelector('.cart-ico').classList.remove('open');
+    } else {
+      if (!(cart.querySelector('.cart-ico').classList.contains('open'))) {
+        cart.querySelector('.cart-ico').classList.add('open');
+      }
+      const removeButton = cart.querySelector('.quick-cart-product-remove');
+      removeButton.addEventListener('click', removeFromForm);
     }
   }
+}
+
+function clickSize(event) {
+  event.stopPropagation();
+  if (event.target.parentNode.dataset.value !== undefined) {
+    if ((event.target.parentNode.dataset.value.length < 3) || (event.target.parentNode.dataset.value === 'xxl')) {
+      localStorage.size = event.target.parentNode.dataset.value;
+    } else {
+      localStorage.color = event.target.parentNode.dataset.value;
+    }
+  }
+}
+
+function sendForm() {
+  const postForm = new XMLHttpRequest();
+  let formData = new FormData(form);
+  formData.append('productId', form.dataset.productId);
+  postForm.addEventListener('load', updateCart);
+  postForm.open('POST', 'https://neto-api.herokuapp.com/cart');
+  postForm.send(formData);
+}
+
+function removeFromForm() {
+  const removeForm = new XMLHttpRequest();
+  let formData = new FormData();
+  formData.append('productId', event.target.dataset.id);
+  removeForm.addEventListener('load', updateCart);
+  removeForm.open('POST', 'https://neto-api.herokuapp.com/cart/remove');
+  removeForm.send(formData);
+  console.log(event.target.dataset.id)
+  updateCart();
+}
+
+function updateCart() {
+  cartStatus.open('GET', 'https://neto-api.herokuapp.com/cart', true);
+  cartStatus.send();
+  cartStatus.addEventListener('load', cartPrint);
 }
