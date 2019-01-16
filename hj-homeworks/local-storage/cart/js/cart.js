@@ -1,15 +1,18 @@
 'use strict';
 
-const colorSnippet = document.getElementById('colorSwatch');
-const sizeSnippet = document.getElementById('sizeSwatch');
-const cart = document.getElementById('quick-cart');
-const targets = document.getElementsByClassName('swatch-element');
-const clickingArea = document.querySelector('.swatches');
-const form = document.getElementById('AddToCartForm');
-const formButton = document.getElementById('AddToCart');
-let colorsAvailable = new XMLHttpRequest();
-let sizeAvailable = new XMLHttpRequest();
-let cartStatus = new XMLHttpRequest();
+const 
+colorSnippet = document.getElementById('colorSwatch'),
+sizeSnippet = document.getElementById('sizeSwatch'),
+cart = document.getElementById('quick-cart'),
+targets = document.getElementsByClassName('swatch-element'),
+clickingArea = document.querySelector('.swatches'),
+form = document.getElementById('AddToCartForm'),
+formButton = document.getElementById('AddToCart');
+
+let 
+colorsAvailable = new XMLHttpRequest(),
+sizeAvailable = new XMLHttpRequest(),
+cartStatus = new XMLHttpRequest();
 
 colorsAvailable.open('GET', 'https://neto-api.herokuapp.com/cart/colors', true);
 colorsAvailable.send();
@@ -24,9 +27,10 @@ clickingArea.addEventListener('click', clickSize);
 formButton.addEventListener('click', sendForm);
 
 function colorPrint() {
-  let divClass;
-  let inputClass;
-  let choice;
+  let 
+  divClass,
+  inputClass,
+  choice;
   if (event.target.status === 200) {
     const response = JSON.parse(event.target.responseText);
     for (let color of response) {
@@ -48,9 +52,10 @@ function colorPrint() {
 }
 
 function sizePrint() {
-  let divClass;
-  let inputClass;
-  let choice;
+  let 
+  divClass,
+  inputClass,
+  choice;
   if (event.target.status === 200) {
     const response = JSON.parse(event.target.responseText);
     for (let size of response) {
@@ -113,6 +118,7 @@ function clickSize(event) {
 }
 
 function sendForm() {
+  event.preventDefault();
   const postForm = new XMLHttpRequest();
   let formData = new FormData(form);
   formData.append('productId', form.dataset.productId);
@@ -128,7 +134,6 @@ function removeFromForm() {
   removeForm.addEventListener('load', updateCart);
   removeForm.open('POST', 'https://neto-api.herokuapp.com/cart/remove');
   removeForm.send(formData);
-  console.log(event.target.dataset.id)
   updateCart();
 }
 

@@ -5,15 +5,16 @@ const longPollingCards = document.querySelectorAll('.long-pooling div');
 longPolling();
 
 function longPolling() {
-  const response = new XMLHttpRequest();
-  response.addEventListener('load', onLoad);
-  response.open('GET', 'https://neto-api.herokuapp.com/comet/long-pooling');
-  response.send();
+  const longResponse = new XMLHttpRequest();
+  longResponse.addEventListener('load', longOnLoad);
+  longResponse.open('GET', 'https://neto-api.herokuapp.com/comet/long-pooling');
+  longResponse.send();
 }
 
-function onLoad(event) {
-  if (event.target.status === 200) {
-    console.log(event.target)
+function longOnLoad(event) {
+  console.log(event.target)
+  if ((event.target.status >= 200) && (event.target.status < 300)) {
     activeCard(longPollingCards, event.target.responseText);
   }
+  longPolling();
 }

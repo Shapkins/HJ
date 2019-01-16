@@ -30,7 +30,7 @@ function signInFunction(event) {
   })
   .then((res) => {
     if (res.ok) {
-      signIn.querySelector('output').textContent = `Пользователь ${res.name} успешно авторизован`;
+      signIn.querySelector('output').textContent = `Пользователь ${signIn.querySelector('#email').value} успешно авторизован`;
     } else {
       throw new Error(res.statusText);
     }
@@ -55,8 +55,7 @@ function signUpFunction(event) {
   })
   .then((res) => {
     if (res.ok) {
-      console.log(res)
-      signIn.querySelector('output').textContent = `Пользователь ${res.name} успешно зарегистрирован`;
+      signIn.querySelector('output').textContent = `Пользователь ${signUp.querySelector('#email').value} успешно зарегистрирован`;
     } else {
       throw new Error(res.statusText);
     }
