@@ -1,18 +1,16 @@
 'use strict';
-let newElement;
 
 function createElement(node) {
-  console.log(node)
   if (typeof node === 'object') {
-    newElement = document.createElement(node.name);
+    const newElement = document.createElement(node.name);
     if (node.props !== null) {
       Object.keys(node.props).forEach(prop => newElement.setAttribute(prop, node.props[prop]));
     }
-    node.childs.forEach(child => createElement.call(newElement, child));
+    node.childs.forEach(child => newElement.appendChild(createElement(child)));
     return newElement;
   }
   if (typeof node === 'string') {
-    this.textContent = node;
+    const newElement = document.createTextNode(node);
+    return newElement;
   }
-  console.log(newElement)
 }

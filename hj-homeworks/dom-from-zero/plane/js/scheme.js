@@ -158,6 +158,7 @@ function emptySeats() {
 
 function changeSeat(event) {
   event.stopPropagation();
+  console.log(mainContainer.querySelectorAll('div.seat'));
   if (event.altKey) {
     if (event.target.classList.contains('adult')) {
       event.target.classList.remove('adult');
@@ -190,4 +191,5 @@ function footer() {
   }
   totalAdult.textContent = adults;
   totalHalf.textContent = children;
+  totalPax.textContent = response.passengers - totalAdult.textContent - totalHalf.textContent;
 }

@@ -13,7 +13,7 @@ function el(tagName, attributes, children) {
     Object.keys(attributes).forEach(i => element.setAttribute(i, attributes[i]));
   }
   if (typeof children === 'string') {
-    element.textContent = children;
+    element.innerText = children;
   } else if (children instanceof Array) {
     children.forEach(child => element.appendChild(child));
   }
@@ -27,7 +27,7 @@ function createComment(comment) {
       el('div', {class: 'avatar', style: `background-image: url("${comment.author.pic}")`}),
     ]),
     el('div', {class: 'comment-block'}, [
-      el('p', {class: 'comment-text'}, `${comment.text.split('\n').join('<br>')}`),
+      el('p', {class: 'comment-text'}, `${comment.text}`),
       el('div', {class: 'bottom-comment'}, [
         el('div', {class: 'coment-date'}, `${new Date(comment.date).toLocaleString('ru-Ru')}`),
         el('ul', {class: 'comment-actions'}, [
