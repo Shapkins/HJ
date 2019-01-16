@@ -46,7 +46,7 @@ function showScheme(event) {
   fullButton.disable = false;
   emptyButton.disable = false;
   mapTitle.textContent = title;
-  totalPax.textContent = response.passengers;
+  totalPax.textContent = 0;
   totalHalf.textContent = 0;
   totalAdult.textContent = 0;
   for (let i = 0; i < response.scheme.length; i++) {
@@ -191,5 +191,5 @@ function footer() {
   }
   totalAdult.textContent = adults;
   totalHalf.textContent = children;
-  totalPax.textContent = response.passengers - totalAdult.textContent - totalHalf.textContent;
+  totalPax.textContent = totalAdult.textContent + totalHalf.textContent;
 }
