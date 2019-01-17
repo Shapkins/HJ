@@ -1,8 +1,20 @@
 'use strict';
 
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
-console.log(canvas)
+const canvas = document.querySelector('canvas'),
+ctx = canvas.getContext('2d'),
+functions = [function nextPoint(x, y, time) {
+  return {
+    x: x + Math.sin((50 + x + (time / 10)) / 100) * 3,
+    y: y + Math.sin((45 + x + (time / 10)) / 100) * 4
+  };
+},
+function nextPoint(x, y, time) {
+  return {
+    x: x + Math.sin((x + (time / 10)) / 100) * 5,
+    y: y + Math.sin((10 + x + (time / 10)) / 100) * 2
+  }
+}];
+let skyObjects = [];
 
 class SkyObject {
   constructor (x = 0, y = 0) {
@@ -11,6 +23,7 @@ class SkyObject {
     this.size = (Math.floor(Math.random() * 6) + 1) / 10;
     this.weight = 5 * this.size;
     this.color = '#ffffff';
+    this.redraw = functions[Math.floor(Math.random() * functions.length)];
   }
 }
 
@@ -31,30 +44,49 @@ class Round extends SkyObject {
 }
 
 function moreStars() {
-  let count = Math.floor(Math.random() * 101) + 25;
+  let count = Math.floor(Math.random() * 76) + 25;
   for (let i = 0; i < count; i++) {
-    drawSky();
+    skyObjects.push(new Round);
+    skyObjects.push(new Cross);
   }
 }
 
-function drawSky() {
-  let drawRound = new Round;
+function drawRound(round) {
+  let {x, y} = round.redraw(round.x, round.y, Date.now());
   ctx.beginPath();
-  ctx.arc(drawRound.x, drawRound.y, drawRound.radius, 0, 2 * Math.PI);
-  ctx.strokeStyle = drawRound.color;
-  ctx.stroke();
-  let drawCross = new Cross;
-  ctx.beginPath();
-  ctx.rotate(Math.PI * 2 * drawCross.angle / 360);
-  ctx.moveTo(drawCross.x, drawCross.y);
-  ctx.lineTo(drawCross.x + drawCross.side, drawCross.y);
-  ctx.moveTo(drawCross.x, drawCross.y);
-  ctx.lineTo(drawCross.x - drawCross.side, drawCross.y);
-  ctx.moveTo(drawCross.x, drawCross.y);
-  ctx.lineTo(drawCross.x, drawCross.y + drawCross.side);
-  ctx.moveTo(drawCross.x, drawCross.y);
-  ctx.lineTo(drawCross.x, drawCross.y - drawCross.side);
+  ctx.arc(x, y, round.radius, 0, 2 * Math.PI);
+  ctx.strokeStyle = round.color;
   ctx.stroke();
 }
 
+function drawCross(cross) {
+  let {x, y} = cross.redraw(cross.x, cross.y, Date.now());
+  ctx.beginPath();
+  ctx.rotate(Math.PI * 2 * cross.angle / 360);
+  ctx.moveTo(x, y);
+  ctx.lineTo(x + cross.side, y);
+  ctx.moveTo(x, y);
+  ctx.lineTo(x - cross.side, y);
+  ctx.moveTo(x, y);
+  ctx.lineTo(x, y + cross.side);
+  ctx.moveTo(x, y);
+  ctx.lineTo(x, y - cross.side);
+  ctx.stroke();
+}
+
+function redrawAll() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let star of skyObjects) {
+    if (star instanceof Cross) {
+      drawCross(star);
+    } else {
+      drawRound(star);
+    }
+  }
+}
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
 moreStars();
+setInterval(redrawAll, 50);

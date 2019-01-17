@@ -1,15 +1,14 @@
 'use strict';
 
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
-const min = 5;
-const max = 100;
-const s = 1;
-const l = 0.5;
-let h = 0;
-let radius = max;
-let radiusChange = 0;
-let hueChange = 1;
+const canvas = document.querySelector('canvas'),
+ctx = canvas.getContext('2d'),
+min = 5,
+max = 100;
+let h = 0,
+radius = max,
+radiusChange = 0,
+hueChange = 1,
+inCanvas = false;
 
 ctx.lineJoin = 'round';
 ctx.lineCap = 'round';
@@ -20,6 +19,7 @@ canvas.addEventListener('dblclick', doubleClickClear);
 canvas.addEventListener('mousemove', mouseDraw);
 canvas.addEventListener('mousedown', mouseDraw);
 canvas.addEventListener('mouseup', mouseDraw);
+canvas.addEventListener('mouseleave', mouseDraw);
 document.addEventListener('keydown', hslHueChange);
 document.addEventListener('keyup', hslHueChange);
 
@@ -49,22 +49,30 @@ function doubleClickClear() {
 
 function mouseDraw(event) {
   event.preventDefault();
-  console.log(event)
   if (event.type === 'click') {
     ctx.beginPath();
     ctx.arc(event.clientX, event.clientY, radius, 0, 2 * Math.PI);
     ctx.fill();
   }
   if (event.type === 'mousedown') {
+    inCanvas = true;
     ctx.beginPath();
+    ctx.strokeStyle = `hsl(${h}, 100%, 50%)`;
     ctx.moveTo(event.clientX, event.clientY);
   }
   if (event.type === 'mousemove') {
-    ctx.lineTo(event.clientX, event.clientY);
-    ctx.lineWidth = radius;
+    if (inCanvas) {
+      ctx.lineTo(event.clientX, event.clientY);
+      ctx.lineWidth = radius;
+    }
   }
   if (event.type === 'mouseup') {
-    ctx.stroke();
+    if (inCanvas) {
+      ctx.stroke();
+    }
+  }
+  if (event.type === 'mouseleave') {
+    inCanvas = false;
   }
 }
 
