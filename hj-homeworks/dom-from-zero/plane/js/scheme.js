@@ -1,17 +1,17 @@
 'use strict';
 
-const form = document.querySelector('form');
-const select = document.querySelector('select');
-const showSchemeButton = document.getElementById('btnSeatMap');
-const mainContainer = document.getElementById('seatMapDiv');
-const mapTitle = document.getElementById('seatMapTitle');
-const totalPax = document.getElementById('totalPax');
-const totalHalf = document.getElementById('totalHalf');
-const totalAdult = document.getElementById('totalAdult');
-const fullButton = document.getElementById('btnSetFull');
-const emptyButton = document.getElementById('btnSetEmpty');
-let response;
-let title;
+const form = document.querySelector('form'),
+select = document.querySelector('select'),
+showSchemeButton = document.getElementById('btnSeatMap'),
+mainContainer = document.getElementById('seatMapDiv'),
+mapTitle = document.getElementById('seatMapTitle'),
+totalPax = document.getElementById('totalPax'),
+totalHalf = document.getElementById('totalHalf'),
+totalAdult = document.getElementById('totalAdult'),
+fullButton = document.getElementById('btnSetFull'),
+emptyButton = document.getElementById('btnSetEmpty');
+let response,
+title;
 
 select.addEventListener('change', sendRequest);
 showSchemeButton.addEventListener('click', showScheme);
@@ -140,6 +140,7 @@ function fullSeats() {
     }
     seat.classList.add('adult');
   }
+  footer();
 }
 
 
@@ -154,27 +155,42 @@ function emptySeats() {
       seat.classList.remove('adult');
     }
   }
+  footer();
 }
 
 function changeSeat(event) {
-  event.stopPropagation();
-  console.log(mainContainer.querySelectorAll('div.seat'));
+  event.preventDefault();
   if (event.altKey) {
-    if (event.target.classList.contains('adult')) {
-      event.target.classList.remove('adult');
+    if (event.currentTarget.classList.contains('adult')) {
+      event.currentTarget.classList.remove('adult');
     }
-    if (!(event.target.classList.contains('half'))) {
-      event.target.classList.add('half'); 
+    if (!(event.currentTarget.classList.contains('half'))) {
+      event.currentTarget.classList.add('half'); 
     }
   } else {
-    if (event.target.classList.contains('half')) {
-      event.target.classList.remove('half');
+    if (event.currentTarget.classList.contains('half')) {
+      event.currentTarget.classList.remove('half');
     }
-    if (!(event.target.classList.contains('adult'))) {
-      event.target.classList.add('adult'); 
+    if (!(event.currentTarget.classList.contains('adult'))) {
+      event.currentTarget.classList.add('adult'); 
     }
   }
-  footer();
+  if (event.altKey) {
+    if (event.currentTarget.classList.contains('adult')) {
+      event.currentTarget.classList.remove('adult');
+    }
+    if (!(event.currentTarget.classList.contains('half'))) {
+      event.currentTarget.classList.add('half'); 
+    }
+  } else {
+    if (event.currentTarget.classList.contains('half')) {
+      event.currentTarget.classList.remove('half');
+    }
+    if (!(event.currentTarget.classList.contains('adult'))) {
+      event.currentTarget.classList.add('adult'); 
+    }
+  }
+footer();
 }
 
 function footer() {
@@ -191,5 +207,5 @@ function footer() {
   }
   totalAdult.textContent = adults;
   totalHalf.textContent = children;
-  totalPax.textContent = totalAdult.textContent + totalHalf.textContent;
+  totalPax.textContent = +totalAdult.textContent + +totalHalf.textContent;
 }
