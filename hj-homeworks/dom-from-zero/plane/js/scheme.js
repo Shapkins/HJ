@@ -166,6 +166,8 @@ function changeSeat(event) {
     }
     if (!(event.currentTarget.classList.contains('half'))) {
       event.currentTarget.classList.add('half'); 
+    } else {
+      event.currentTarget.classList.remove('half');
     }
   } else {
     if (event.currentTarget.classList.contains('half')) {
@@ -173,21 +175,8 @@ function changeSeat(event) {
     }
     if (!(event.currentTarget.classList.contains('adult'))) {
       event.currentTarget.classList.add('adult'); 
-    }
-  }
-  if (event.altKey) {
-    if (event.currentTarget.classList.contains('adult')) {
+    } else {
       event.currentTarget.classList.remove('adult');
-    }
-    if (!(event.currentTarget.classList.contains('half'))) {
-      event.currentTarget.classList.add('half'); 
-    }
-  } else {
-    if (event.currentTarget.classList.contains('half')) {
-      event.currentTarget.classList.remove('half');
-    }
-    if (!(event.currentTarget.classList.contains('adult'))) {
-      event.currentTarget.classList.add('adult'); 
     }
   }
 footer();
