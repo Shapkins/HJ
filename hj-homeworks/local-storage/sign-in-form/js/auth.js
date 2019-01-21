@@ -19,20 +19,26 @@ function signInFunction(event) {
     localStorage.email = signIn.querySelector('#email').value;
   }
   let formData = new FormData(signIn);
+  let data = {};
+  for (const [fieldName, fieldData] of formData) {
+    data[fieldName] = fieldData;
+  }
+
   //let formData = 1;
   fetch('https://neto-api.herokuapp.com/signin', {
-    body: JSON.stringify(formData),
+    body: JSON.stringify(data),
     credentials: "same-origin",
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
   })
-  .then((res) => {
-    if (res.ok) {
-      signIn.querySelector('output').textContent = `Пользователь ${signIn.querySelector('#email').value} успешно авторизован`;
+  .then((res) => res.json())
+  .then((data) => {
+    if (data.error) {
+      signIn.querySelector('output').textContent = data.message;
     } else {
-      throw new Error(res.statusText);
+      signIn.querySelector('output').textContent = `Пользователь ${data.name} успешно авторизован`;
     }
   })
   .catch((err) => {
@@ -44,23 +50,30 @@ function signInFunction(event) {
 function signUpFunction(event) {
   event.preventDefault();
   let formData = new FormData(signUp);
+  let data = {};
+  for (const [fieldName, fieldData] of formData) {
+    data[fieldName] = fieldData;
+  }
+  console.log(JSON.stringify(data))
   //let formData = 1;
   fetch('https://neto-api.herokuapp.com/signup', {
-    body: JSON.stringify(formData),
+    body: JSON.stringify(data),
     credentials: "same-origin",
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
   })
-  .then((res) => {
-    if (res.ok) {
-      signIn.querySelector('output').textContent = `Пользователь ${signUp.querySelector('#email').value} успешно зарегистрирован`;
+  .then((res) => res.json())
+  .then((data) => {
+    console.log(data)
+    if (data.error) {
+      signUp.querySelector('output').textContent = data.message;
     } else {
-      throw new Error(res.statusText);
+      signUp.querySelector('output').textContent = `Пользователь ${data.name} успешно зарегистрирован`;
     }
   })
   .catch((err) => {
-    signIn.querySelector('output').textContent = err.message;
+    signUp.querySelector('output').textContent = err.message;
   });
 }
