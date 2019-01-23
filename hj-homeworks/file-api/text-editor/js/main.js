@@ -20,12 +20,13 @@ class TextEditor {
   registerEvents() {
     const save = throttle( this.save.bind( this ), 1000 ),
     showHint = this.showHint.bind(this),
-    loadFile = this.loadFile.bind(this);
+    loadFile = this.loadFile.bind(this),
+    hideHint = this.hideHint.bind(this);
 
     this.contentContainer.addEventListener( 'input', save );
     this.container.addEventListener('dragover', showHint);
     this.container.addEventListener('drop', loadFile);
-    //this.container.addEventListener('dropleave', this.hideHint.bind(this));
+    this.container.addEventListener('dropleave', hideHint);
   }
 
   loadFile(event) {
