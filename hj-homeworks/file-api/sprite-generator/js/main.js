@@ -84,6 +84,3 @@ class SpriteGenerator {
 
 
 new SpriteGenerator( document.getElementById( 'generator' ));
-
-// Доделал третье задание, но функционал не дает мне туда добить ссылку, потому пока сюда
-// https://github.com/Shapkins/HJ/blob/master/hj-homeworks/file-api/instagram-layout/js/main.js
