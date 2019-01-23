@@ -1,8 +1,8 @@
 'use strict';
 
-const connection = new WebSocket('wss://neto-api.herokuapp.com/counter');
-const counter = document.querySelector('.counter');
-const errorTag = document.querySelector('output.errors');
+const connection = new WebSocket('wss://neto-api.herokuapp.com/counter'),
+counter = document.querySelector('.counter'),
+errorTag = document.querySelector('output.errors');
 if (localStorage.connections === undefined) {
   localStorage.connections = 0;
 };
