@@ -1,51 +1,49 @@
 'use strict';
 
-const eye = document.querySelector('.big-book__eye'),
-pupil = document.querySelector('.big-book__pupil');
+const 
+  eye = document.querySelector('.big-book__eye'),
+  pupil = document.querySelector('.big-book__pupil'),
+  height = document.body.scrollHeight,
+  width = document.body.scrollWidth,
+  eyeX = eye.getBoundingClientRect().x + eye.getBoundingClientRect().width * 0.5,
+  eyeY = eye.getBoundingClientRect().y + eye.getBoundingClientRect().height * 0.5;
 
+let
+  pointerX,
+  pointerY,
+  x,
+  maxX,
+  y,
+  maxY;
 
-window.addEventListener('mousemove', (event) => {
-  let siteSize = document.body.getBoundingClientRect(),
-  windowWidth = document.documentElement.clientWidth,
-  windowHeight = document.documentElement.clientHeight,
-  eyeSize = eye.getBoundingClientRect(),
-  eyeWidth = eyeSize.width,
-  eyeHeight = eyeSize.height,
-  pointerX = event.pageX,
-  pointerY = event.pageY,
-  eyeCenterX = (eyeSize.left - siteSize.left) + (eyeWidth / 2),
-  eyeCenterY = (eyeSize.top - siteSize.top) + (eyeHeight / 2),
-  pupilXFrom = -eyeCenterX,
-  pupilXTo = windowWidth - eyeCenterY,
-  diffX = pointerX - eyeCenterX,
-  relationX,
-  diffY = pointerY - eyeCenterY,
-  relationY;
-
-  
-  
-  if (diffX < 0) {
-    relationX = -100 * diffX / pupilXFrom;
-  } else if (diffX > 0) {
-    relationX = diffX / pupilXTo * 100;
+function moving() {
+  if (pointerX >= eyeX) {
+    maxX = width - eyeX;
+    x = pointerX - eyeX;
   } else {
-    relationX = 0;
+    maxX = eyeX;
+    x = pointerX - eyeX;
   }
 
-  if (diffY < 0) {
-    relationY = diffY / (eyeSize.top + eyeHeight / 2) * 100
-  } else if (diffY > 0) {
-    relationY = diffY / (windowHeight - (eyeSize.bottom - eyeHeight / 2)) * 100;
+  if (pointerY >= eyeY) {
+    maxY = height - eyeY;
+    y = pointerY - eyeY;
   } else {
-    relationY = 0;
+    maxY = eyeY;
+    y = pointerY - eyeY;
   }
 
-  let checkSize = (100 - ((relationX * Math.sign(relationX) + relationY * Math.sign(relationY)) / 2) * 0.03);
-  if (checkSize < 1) {
-    checkSize = 1;
-  }
+  pupil.style.setProperty('--pupil-x', `${x / maxX * 30}px`);
+  pupil.style.setProperty('--pupil-y', `${y / maxY * 30}px`);
+  pupil.style.setProperty('--pupil-size', (1 - Math.sqrt(x * x + y * y) / Math.sqrt(maxX * maxX + maxY * maxY)) * 2 + 1);
+  
+  requestAnimationFrame(moving)
+}
 
-  pupil.style.setProperty('--pupil-x', `${relationX * 0.3}px`);
-  pupil.style.setProperty('--pupil-y', `${relationY * 0.3}px`);
-  pupil.style.setProperty('--pupil-size', checkSize);
-});
+function pointer() {
+  pointerX = event.clientX + window.pageXOffset;
+  pointerY = event.clientY + window.pageYOffset;
+}
+
+document.addEventListener('mousemove', pointer);
+requestAnimationFrame(moving)
