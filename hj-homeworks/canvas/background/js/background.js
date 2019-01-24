@@ -17,10 +17,10 @@ function nextPoint(x, y, time) {
 let skyObjects = [];
 
 class SkyObject {
-  constructor (x = 0, y = 0) {
-    this.x = Math.floor(Math.random() * canvas.width);
-    this.y = Math.floor(Math.random() * canvas.width);
-    this.size = (Math.floor(Math.random() * 6) + 1) / 10;
+  constructor (x, y) {
+    this.x = x;
+    this.y = y;
+    this.size = (Math.floor(Math.random() * 5) + 1) / 10;
     this.weight = 5 * this.size;
     this.color = '#ffffff';
     this.redraw = functions[Math.floor(Math.random() * functions.length)];
@@ -28,17 +28,17 @@ class SkyObject {
 }
 
 class Cross extends SkyObject {
-  constructor (x = 0, y = 0) {
-    super();
+  constructor (x, y) {
+    super(x, y);
     this.side = 20 * this.size;
     this.angle = Math.floor(Math.random() * 360);
-    this.speed = (Math.floor(Math.random() * 5) - 2) / 10;
+    this.speed = (Math.floor(Math.random() * 4) - 2) / 10;
   }
 }
 
 class Round extends SkyObject {
-  constructor (x = 0, y = 0) {
-    super();
+  constructor (x, y) {
+    super(x, y);
     this.radius = 12 * this.size;
   }
 }
@@ -46,23 +46,27 @@ class Round extends SkyObject {
 function moreStars() {
   let count = Math.floor(Math.random() * 76) + 25;
   for (let i = 0; i < count; i++) {
-    skyObjects.push(new Round);
-    skyObjects.push(new Cross);
+    skyObjects.push(new Round((Math.floor(Math.random() * canvas.width)), Math.floor(Math.random() * canvas.height)));
+    skyObjects.push(new Cross((Math.floor(Math.random() * canvas.width)), Math.floor(Math.random() * canvas.height)));
   }
 }
 
 function drawRound(round) {
   let {x, y} = round.redraw(round.x, round.y, Date.now());
-  ctx.beginPath();
-  ctx.arc(x, y, round.radius, 0, 2 * Math.PI);
+  ctx.lineWidth = round.weight;
   ctx.strokeStyle = round.color;
+  ctx.beginPath();
+  ctx.arc(x, y, round.radius, 0, 2 * Math.PI, false);
   ctx.stroke();
 }
 
 function drawCross(cross) {
   let {x, y} = cross.redraw(cross.x, cross.y, Date.now());
+  ctx.translate(x, y);
+  ctx.rotate(Math.PI * 2 * cross.angle / 360)
+  ctx.lineWidth = cross.weight;
+  ctx.strokeStyle = cross.color;
   ctx.beginPath();
-  ctx.rotate(Math.PI * 2 * cross.angle / 360);
   ctx.moveTo(x, y);
   ctx.lineTo(x + cross.side, y);
   ctx.moveTo(x, y);
@@ -72,6 +76,9 @@ function drawCross(cross) {
   ctx.moveTo(x, y);
   ctx.lineTo(x, y - cross.side);
   ctx.stroke();
+  ctx.rotate(- Math.PI * 2 * cross.angle / 360);
+  ctx.translate(-x, -y);
+  cross.angle += cross.speed;
 }
 
 function redrawAll() {
